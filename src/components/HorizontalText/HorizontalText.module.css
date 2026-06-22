@@ -1,0 +1,52 @@
+.horizontalSection {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-navy);
+  border-top: 1px solid var(--color-navy-light);
+  border-bottom: 1px solid var(--color-navy-light);
+  position: relative;
+  z-index: 10;
+}
+
+.container {
+  width: 100%;
+}
+
+.horizontalText {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  padding-left: 100vw;
+  font-size: clamp(2rem, 6vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-white);
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.char {
+  display: inline-block;
+  color: var(--color-white);
+}
+
+/* Accent highlight on key industry terms */
+.word:nth-child(3) .char,   /* MBA */
+.word:nth-child(8) .char,   /* internships, */
+.word:nth-child(10) .char,  /* placements, */
+.word:nth-child(12) .char,  /* case */
+.word:nth-child(13) .char,  /* competitions, */
+.word:nth-child(18) .char   /* networks. */ {
+  color: var(--color-gold);
+}
+
+.space {
+  display: inline-block;
+}

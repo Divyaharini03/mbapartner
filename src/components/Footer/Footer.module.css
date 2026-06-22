@@ -1,0 +1,167 @@
+.footer {
+  background-color: var(--color-navy);
+  color: var(--color-slate-300);
+  padding: var(--spacing-4xl) 0 var(--spacing-xl) 0;
+  border-top: 1px solid var(--color-navy-light);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: var(--spacing-3xl);
+  margin-bottom: var(--spacing-3xl);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-white);
+  letter-spacing: -0.03em;
+}
+
+.logoPartner {
+  font-weight: 500;
+  color: var(--color-slate-400);
+}
+
+.logoDot {
+  color: var(--color-gold);
+}
+
+.tagline {
+  font-size: 0.9rem;
+  color: var(--color-slate-400);
+  line-height: 1.6;
+  max-width: 320px;
+  margin-bottom: 0;
+}
+
+/* Col Titles */
+.colTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-white);
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Links Col */
+.linksList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.linksList a {
+  color: var(--color-slate-400);
+  font-size: 0.9rem;
+  transition: color var(--transition-fast);
+}
+
+.linksList a:hover {
+  color: var(--color-white);
+}
+
+/* Contact Col */
+.contactCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.contactEmail {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.mailIcon {
+  color: var(--color-slate-500);
+  flex-shrink: 0;
+}
+
+.contactEmail a {
+  color: var(--color-slate-400);
+  font-size: 0.9rem;
+  transition: color var(--transition-fast);
+}
+
+.contactEmail a:hover {
+  color: var(--color-white);
+}
+
+.socialsGroup {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.socialLink {
+  color: var(--color-slate-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.socialLink:hover {
+  color: var(--color-white);
+}
+
+/* Bottom Bar */
+.bottomBar {
+  border-top: 1px solid var(--color-navy-light);
+  padding-top: var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--color-slate-500);
+}
+
+@media (max-width: 640px) {
+  .bottomBar {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    text-align: center;
+  }
+}
+
+.copyright {
+  margin-bottom: 0;
+}
+
+.credit {
+  margin-bottom: 0;
+}

@@ -1,0 +1,148 @@
+.introOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-navy-dark);
+  overflow: hidden;
+}
+
+/* Subtle radial glow behind the logo */
+.introOverlay::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Animated grain texture for premium feel */
+.introOverlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Logo icon container */
+.logoIcon {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.logoIcon svg {
+  width: 72px;
+  height: 72px;
+}
+
+.logoIcon svg path {
+  stroke: var(--color-blue);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+/* Glow ring around logo */
+.glowRing {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  opacity: 0;
+}
+
+/* Logo text */
+.logoText {
+  font-family: var(--font-sans);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--color-white);
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  overflow: hidden;
+}
+
+.logoPartner {
+  font-weight: 400;
+  color: var(--color-slate-400);
+}
+
+.logoDot {
+  color: var(--color-blue);
+  font-weight: 800;
+}
+
+/* Each letter wrapper for stagger animation */
+.letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+/* Tagline under logo */
+.tagline {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-slate-500);
+  margin-top: 16px;
+  opacity: 0;
+}
+
+/* Progress bar at bottom */
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-gold));
+  border-radius: 0 2px 2px 0;
+}
+
+/* Exit animation state */
+.introOverlay.exiting {
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .logoIcon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .logoIcon svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  .glowRing {
+    width: 86px;
+    height: 86px;
+  }
+
+  .logoText {
+    font-size: 1.75rem;
+  }
+
+  .tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+  }
+}

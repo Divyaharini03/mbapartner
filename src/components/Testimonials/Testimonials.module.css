@@ -1,0 +1,106 @@
+.section {
+  padding: var(--spacing-4xl) 0;
+  background-color: var(--color-slate-50);
+  border-bottom: 1px solid var(--color-slate-100);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--color-slate-300);
+  box-shadow: var(--shadow-md);
+}
+
+.quoteMark {
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--color-blue-light);
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  font-family: Georgia, serif;
+  user-select: none;
+  pointer-events: none;
+}
+
+.quote {
+  font-size: 0.95rem;
+  color: var(--color-slate-600);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-xl);
+  position: relative;
+  z-index: 2;
+  font-style: italic;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: auto; /* Push profile to bottom of card */
+  border-top: 1px solid var(--color-slate-100);
+  padding-top: var(--spacing-md);
+}
+
+.photo {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-round);
+  object-fit: cover;
+  border: 2px solid var(--color-white);
+  box-shadow: 0 0 0 2px var(--color-slate-200);
+  background-color: var(--color-slate-100);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 2px;
+}
+
+.college {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.role {
+  font-size: 0.75rem;
+  color: var(--color-slate-500);
+  line-height: 1.3;
+}
