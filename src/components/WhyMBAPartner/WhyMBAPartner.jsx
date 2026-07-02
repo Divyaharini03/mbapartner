@@ -1,11 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Users, Briefcase, Target, Globe } from 'lucide-react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 import SectionHeader from '../SectionHeader/SectionHeader';
 import styles from './WhyMBAPartner.module.css';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const WhyMBAPartner = () => {
   const gridRef = useRef(null);
@@ -13,8 +12,8 @@ const WhyMBAPartner = () => {
   const features = [
     {
       icon: <Users size={24} className={styles.iconBlue} />,
-      title: 'Industry Mentors',
-      desc: 'Learn from IIM graduates, consultants, recruiters, and industry leaders.'
+      title: 'Top B-School Mentors',
+      desc: 'Learn directly from elite alumni of IIMs, XLRI, FMS, ISB, and SPJIMR.'
     },
     {
       icon: <Briefcase size={24} className={styles.iconBlue} />,
@@ -23,8 +22,8 @@ const WhyMBAPartner = () => {
     },
     {
       icon: <Target size={24} className={styles.iconBlue} />,
-      title: 'Placement Focused',
-      desc: 'Syllabi and mock drills designed around actual company hiring criteria.'
+      title: 'End-to-End Bootcamps',
+      desc: 'Comprehensive placement bootcamps designed around actual company hiring criteria.'
     },
     {
       icon: <Globe size={24} className={styles.iconBlue} />,
@@ -40,7 +39,7 @@ const WhyMBAPartner = () => {
     if (!cards.length) return;
 
     const ctx = gsap.context(() => {
-      gsap.set(cards, { opacity: 0, y: 50, willChange: 'transform, opacity' });
+      gsap.set(cards, { opacity: 0, y: 50 });
 
       gsap.to(cards, {
         opacity: 1,
@@ -48,7 +47,6 @@ const WhyMBAPartner = () => {
         duration: 0.7,
         stagger: 0.12,
         ease: 'power3.out',
-        clearProps: 'willChange',
         scrollTrigger: {
           trigger: gridRef.current,
           start: 'top 85%',
@@ -56,13 +54,48 @@ const WhyMBAPartner = () => {
         },
       });
 
-      // Hover scale effects
+      // Hover elevations & Independent Icon animations
       cards.forEach((card) => {
+        const iconWrapper = card.querySelector(`.${styles.iconWrapper}`);
+
         card.addEventListener('mouseenter', () => {
-          gsap.to(card, { scale: 1.03, duration: 0.25, ease: 'power2.out' });
+          gsap.to(card, {
+            y: -7,
+            scale: 1.02,
+            boxShadow: '0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.05)',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+
+          if (iconWrapper) {
+            gsap.to(iconWrapper, {
+              y: -4,
+              rotation: 12,
+              scale: 1.1,
+              duration: 0.3,
+              ease: 'back.out(1.5)'
+            });
+          }
         });
+
         card.addEventListener('mouseleave', () => {
-          gsap.to(card, { scale: 1, duration: 0.25, ease: 'power2.out' });
+          gsap.to(card, {
+            y: 0,
+            scale: 1,
+            boxShadow: 'none',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+
+          if (iconWrapper) {
+            gsap.to(iconWrapper, {
+              y: 0,
+              rotation: 0,
+              scale: 1,
+              duration: 0.3,
+              ease: 'power2.out'
+            });
+          }
         });
       });
     }, gridRef);
@@ -74,8 +107,8 @@ const WhyMBAPartner = () => {
     <section id="why-us" className={styles.section}>
       <div className="container">
         <SectionHeader
-          title="Why Choose MBA Partner?"
-          subtext="We bridge the gap between traditional business education and actual industry expectations."
+          title="Why India's Top MBA Students Choose Us"
+          subtext="We bridge the gap between traditional business education and actual industry expectations with our 98.7% placement success rate."
           badge="Our Pillars"
         />
 

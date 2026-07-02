@@ -1,11 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Calendar, CheckCircle2, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SectionHeader from '../SectionHeader/SectionHeader';
 import styles from './CourseGrid.module.css';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const CourseGrid = ({ onOpenBooking }) => {
   const gridRef = useRef(null);
@@ -19,18 +17,18 @@ const CourseGrid = ({ onOpenBooking }) => {
       tag: 'Most Popular',
       category: 'Career Prep',
       highlights: [
-        'Resume Building',
-        'Mock Interviews',
-        'Aptitude Training',
-        'GD Preparation',
-        'HR Interviews',
+        'CV & Resume Building',
+        'Mock HR Interviews',
+        'Aptitude & GD Preparation',
+        'LinkedIn Optimization',
+        'Industry Networking',
         'Company Specific Preparation'
       ]
     },
     {
       id: 'live-projects',
       slug: 'projects',
-      title: 'Live Projects Program',
+      title: 'Live Projects & Internships',
       duration: '4-6 Weeks',
       tag: null,
       category: 'Industry Exp',
@@ -60,15 +58,15 @@ const CourseGrid = ({ onOpenBooking }) => {
     {
       id: 'iim-mentor',
       slug: 'placements',
-      title: 'IIM Mentor Program',
+      title: '1-on-1 Industry Mentorship',
       duration: 'Flexible',
       tag: null,
       category: 'Mentorship',
       highlights: [
-        'One-on-One Sessions',
-        'Career Planning',
-        'Industry Insights',
-        'Networking Guidance',
+        'One-on-One Sessions with IIM/XLRI Alumni',
+        'Personalized Career Guidance',
+        'Industry Insights & Networking',
+        'Resume & LinkedIn Optimization',
         'Leadership Coaching'
       ]
     },
@@ -111,7 +109,7 @@ const CourseGrid = ({ onOpenBooking }) => {
     if (!cards.length) return;
 
     const ctx = gsap.context(() => {
-      gsap.set(cards, { opacity: 0, y: 50, willChange: 'transform, opacity' });
+      gsap.set(cards, { opacity: 0, y: 55 });
 
       gsap.to(cards, {
         opacity: 1,
@@ -119,7 +117,6 @@ const CourseGrid = ({ onOpenBooking }) => {
         duration: 0.7,
         stagger: 0.1,
         ease: 'power3.out',
-        clearProps: 'willChange',
         scrollTrigger: {
           trigger: gridRef.current,
           start: 'top 85%',
@@ -127,14 +124,76 @@ const CourseGrid = ({ onOpenBooking }) => {
         },
       });
 
-      // Hover scale effects
+      // Hover micro-interactions & Magnetic button effect
       cards.forEach((card) => {
+        const ctaBtn = card.querySelector(`.${styles.ctaButton}`);
+        const checkIcons = card.querySelectorAll(`.${styles.checkIcon}`);
+        const durationBadge = card.querySelector(`.${styles.duration}`);
+
         card.addEventListener('mouseenter', () => {
-          gsap.to(card, { scale: 1.03, duration: 0.25, ease: 'power2.out' });
+          // Elevate card + add soft glow shadow
+          gsap.to(card, {
+            y: -8,
+            scale: 1.015,
+            boxShadow: '0 20px 30px -10px rgba(37, 99, 235, 0.12), 0 10px 15px -5px rgba(37, 99, 235, 0.08)',
+            duration: 0.35,
+            ease: 'power2.out',
+          });
+          // Rotate checkmark icons slightly
+          if (checkIcons.length) {
+            gsap.to(checkIcons, { rotation: 15, scale: 1.1, duration: 0.3, stagger: 0.04, ease: 'power2.out' });
+          }
+          // Zoom duration badge slightly
+          if (durationBadge) {
+            gsap.to(durationBadge, { scale: 1.06, duration: 0.3, ease: 'power2.out' });
+          }
         });
+
         card.addEventListener('mouseleave', () => {
-          gsap.to(card, { scale: 1, duration: 0.25, ease: 'power2.out' });
+          // Reset card
+          gsap.to(card, {
+            y: 0,
+            scale: 1,
+            boxShadow: '0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05)',
+            duration: 0.35,
+            ease: 'power2.out',
+          });
+          // Reset checkmarks
+          if (checkIcons.length) {
+            gsap.to(checkIcons, { rotation: 0, scale: 1, duration: 0.3, ease: 'power2.out' });
+          }
+          // Reset duration badge
+          if (durationBadge) {
+            gsap.to(durationBadge, { scale: 1, duration: 0.3, ease: 'power2.out' });
+          }
         });
+
+        // Magnetic hover effect on button
+        if (ctaBtn) {
+          const onMouseMove = (e) => {
+            const rect = ctaBtn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            gsap.to(ctaBtn, {
+              x: x * 0.3,
+              y: y * 0.3,
+              duration: 0.25,
+              ease: 'power2.out',
+            });
+          };
+
+          const onMouseLeave = () => {
+            gsap.to(ctaBtn, {
+              x: 0,
+              y: 0,
+              duration: 0.35,
+              ease: 'elastic.out(1, 0.3)',
+            });
+          };
+
+          ctaBtn.addEventListener('mousemove', onMouseMove);
+          ctaBtn.addEventListener('mouseleave', onMouseLeave);
+        }
       });
     }, gridRef);
 
@@ -145,8 +204,8 @@ const CourseGrid = ({ onOpenBooking }) => {
     <section id="programs" className={styles.section}>
       <div className="container">
         <SectionHeader
-          title="Programs Designed For Every MBA Journey"
-          subtext="Whether you are preparing for internships, placements, consulting roles, product management, marketing, finance, or leadership positions, MBA Partner has a structured program for you."
+          title="Comprehensive Services For Every MBA Journey"
+          subtext="From Placement Bootcamps and CV & Resume Building to Live Projects and LinkedIn Optimization, we offer end-to-end career guidance."
           badge="Curriculum Catalog"
         />
 

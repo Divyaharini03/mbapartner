@@ -1,9 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './StudentOutcomes.module.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /**
  * CountUpStat – Internal component that animates a single stat value.
@@ -56,27 +53,28 @@ const CountUpStat = ({ value, label, sub }) => {
 const StudentOutcomes = () => {
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
+  const gridRef = useRef(null);
 
   const stats = [
     {
       value: '5000+',
-      label: 'MBA Community',
-      sub: 'Connected across B-schools'
+      label: 'MBA Student Network',
+      sub: 'Across IIMs, IITs, MDI, etc.'
     },
     {
-      value: '2000+',
-      label: 'Students Mentored',
-      sub: 'Personalized 1-on-1 strategy'
+      value: '200+',
+      label: 'Industry Mentors',
+      sub: 'Guidance from top executives'
     },
     {
       value: '700+',
-      label: 'Student Reviews',
-      sub: 'Consistent 4.8/5 rating'
+      label: 'Verified Student Reviews',
+      sub: 'Consistent 4.9/5 rating'
     },
     {
-      value: '95%',
-      label: 'Placement Readiness',
-      sub: 'Verified by hiring partners'
+      value: '98.7%',
+      label: 'Placement Success',
+      sub: 'Secured elite corporate roles'
     }
   ];
 
@@ -85,7 +83,7 @@ const StudentOutcomes = () => {
 
     const ctx = gsap.context(() => {
       const children = headerRef.current.children;
-      gsap.set(children, { opacity: 0, y: 40, willChange: 'transform, opacity' });
+      gsap.set(children, { opacity: 0, y: 40 });
 
       gsap.to(children, {
         opacity: 1,
@@ -93,7 +91,6 @@ const StudentOutcomes = () => {
         duration: 0.7,
         stagger: 0.15,
         ease: 'power3.out',
-        clearProps: 'willChange',
         scrollTrigger: {
           trigger: headerRef.current,
           start: 'top 85%',
@@ -105,18 +102,67 @@ const StudentOutcomes = () => {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    if (!gridRef.current) return;
+
+    const cards = gridRef.current.querySelectorAll(`.${styles.statCard}`);
+    if (!cards.length) return;
+
+    const ctx = gsap.context(() => {
+      gsap.set(cards, { opacity: 0, y: 45 });
+
+      gsap.to(cards, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+      // Hover elevate & golden glow box shadow
+      cards.forEach((card) => {
+        card.addEventListener('mouseenter', () => {
+          gsap.to(card, {
+            y: -6,
+            scale: 1.02,
+            boxShadow: '0 20px 25px -5px rgba(251, 191, 36, 0.12), 0 8px 10px -6px rgba(251, 191, 36, 0.08)',
+            duration: 0.25,
+            ease: 'power2.out',
+          });
+        });
+
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, {
+            y: 0,
+            scale: 1,
+            boxShadow: 'none',
+            duration: 0.25,
+            ease: 'power2.out',
+          });
+        });
+      });
+    }, gridRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section id="outcomes" className={styles.section} ref={sectionRef}>
       <div className={`${styles.container} container`}>
         <div className={styles.header} ref={headerRef}>
           <span className={styles.badge}>Impact in Numbers</span>
-          <h2 className={styles.title}>Proven Outcomes For Ambitious Minds</h2>
+          <h2 className={styles.title}>Proven Outcomes With 98.7% Placement Success</h2>
           <p className={styles.subtitle}>
-            Our candidates secure placement advantages through structured mentoring and real-world exposure.
+            Our candidates secure placement advantages through structured mentoring, CV & Resume building, and real-world exposure.
           </p>
         </div>
 
-        <div className={styles.grid}>
+        <div className={styles.grid} ref={gridRef}>
           {stats.map((stat, idx) => (
             <CountUpStat key={idx} {...stat} />
           ))}

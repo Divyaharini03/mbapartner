@@ -1,10 +1,61 @@
-import React from 'react';
+import { useRef, useEffect } from 'react';
 import { Mail } from 'lucide-react';
+import gsap from 'gsap';
 import styles from './Footer.module.css';
 
 const Footer = () => {
+  const footerRef = useRef(null);
+
+  useEffect(() => {
+    if (!footerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Fade up footer on scroll
+      gsap.fromTo(footerRef.current, {
+        opacity: 0,
+        y: 35
+      }, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: 'top 95%',
+          toggleActions: 'play none none none'
+        }
+      });
+
+      // 2. Social icons bounce elastic on hover
+      const socialLinks = footerRef.current.querySelectorAll(`.${styles.socialLink}`);
+      if (socialLinks.length) {
+        socialLinks.forEach((link) => {
+          link.addEventListener('mouseenter', () => {
+            gsap.to(link, {
+              y: -5,
+              scale: 1.15,
+              duration: 0.4,
+              ease: 'elastic.out(1.2, 0.4)'
+            });
+          });
+
+          link.addEventListener('mouseleave', () => {
+            gsap.to(link, {
+              y: 0,
+              scale: 1,
+              duration: 0.3,
+              ease: 'power2.out'
+            });
+          });
+        });
+      }
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <footer className={styles.footer}>
+    <footer ref={footerRef} className={styles.footer}>
       <div className={`${styles.container} container`}>
         <div className={styles.grid}>
           {/* Brand Column */}
@@ -22,7 +73,7 @@ const Footer = () => {
               </span>
             </div>
             <p className={styles.tagline}>
-              Empowering India's next generation of business leaders with industry-backed preparation programs.
+              Empowering India's next generation of business leaders with industry-backed placement bootcamps and mentorship from IIM, XLRI, and FMS alumni.
             </p>
           </div>
 

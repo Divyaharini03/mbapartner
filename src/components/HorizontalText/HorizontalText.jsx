@@ -1,15 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './HorizontalText.module.css';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const HorizontalText = () => {
   const wrapperRef = useRef(null);
   const textRef = useRef(null);
 
-  const phrase = "Designed for MBA students looking to secure internships, crack placements, win case competitions, and build strong industry networks.";
+  const phrase = "Designed for ambitious MBA students looking to secure top-tier internships, crack competitive placements, win national case competitions, and build strong industry networks with 98.7% placement success.";
   const words = phrase.split(" ");
 
   useEffect(() => {

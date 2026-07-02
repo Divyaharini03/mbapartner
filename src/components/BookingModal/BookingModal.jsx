@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Calendar, Clock, CheckCircle, ArrowRight, Loader2 } from 'lucide-react';
+import gsap from 'gsap';
 import styles from './BookingModal.module.css';
 
 const BookingModal = ({ isOpen, onClose, initialDomain = 'placements' }) => {
+  const containerRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,13 +20,61 @@ const BookingModal = ({ isOpen, onClose, initialDomain = 'placements' }) => {
 
   useEffect(() => {
     if (isOpen) {
-      setFormData(prev => ({
-        ...prev,
-        targetDomain: initialDomain
-      }));
-      setStatus('idle');
+      // Defer state update to next tick to avoid cascading render warning in useEffect
+      const timer = setTimeout(() => {
+        setFormData(prev => ({
+          ...prev,
+          targetDomain: initialDomain
+        }));
+        setStatus('idle');
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [isOpen, initialDomain]);
+
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const modal = containerRef.current.querySelector(`.${styles.modal}`);
+      const headerElements = containerRef.current.querySelectorAll(`.${styles.header} > *`);
+      const inputGroups = containerRef.current.querySelectorAll(`.${styles.inputGroup}`);
+      const slotSection = containerRef.current.querySelector(`.${styles.slotSection}`);
+      const submitBtn = containerRef.current.querySelector(`.${styles.submitButton}`);
+
+      // Set initial states
+      gsap.set(modal, { scale: 0.9, opacity: 0 });
+      gsap.set(headerElements, { y: 15, opacity: 0 });
+      gsap.set(inputGroups, { y: 15, opacity: 0 });
+      if (slotSection) gsap.set(slotSection, { y: 15, opacity: 0 });
+      if (submitBtn) gsap.set(submitBtn, { scale: 0.95, opacity: 0 });
+
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.5 } });
+
+      tl.to(modal, { scale: 1, opacity: 1, duration: 0.4 })
+        .to(headerElements, { y: 0, opacity: 1, stagger: 0.08 }, '-=0.1')
+        .to(inputGroups, { y: 0, opacity: 1, stagger: 0.06 }, '-=0.2');
+
+      if (slotSection) {
+        tl.to(slotSection, { y: 0, opacity: 1, duration: 0.4 }, '-=0.2');
+      }
+      if (submitBtn) {
+        tl.to(submitBtn, { scale: 1, opacity: 1, duration: 0.4 }, '-=0.2');
+      }
+
+      // Add scale hover for submit button
+      if (submitBtn) {
+        submitBtn.addEventListener('mouseenter', () => {
+          gsap.to(submitBtn, { scale: 1.02, duration: 0.2, ease: 'power2.out' });
+        });
+        submitBtn.addEventListener('mouseleave', () => {
+          gsap.to(submitBtn, { scale: 1, duration: 0.2, ease: 'power2.out' });
+        });
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -60,7 +110,7 @@ const BookingModal = ({ isOpen, onClose, initialDomain = 'placements' }) => {
   };
 
   return (
-    <div className={styles.backdrop} onClick={handleBackdropClick}>
+    <div ref={containerRef} className={styles.backdrop} onClick={handleBackdropClick}>
       <div className={styles.modal}>
         <button className={styles.closeButton} onClick={onClose} aria-label="Close modal">
           <X size={20} />

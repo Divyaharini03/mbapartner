@@ -1,8 +1,14 @@
 .heroSection {
   padding-top: 140px;
   padding-bottom: var(--spacing-4xl);
-  background-color: var(--color-white);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 50%, #EFF6FF 100%);
+  background-size: 200% 200%;
   overflow: hidden;
+}
+
+.word {
+  display: inline-block;
+  will-change: transform, opacity;
 }
 
 .heroContainer {

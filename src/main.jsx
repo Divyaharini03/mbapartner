@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import './lib/gsap' // Register GSAP plugins globally (must be before any component)
 import './index.css'
 import App from './App.jsx'
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ArrowRight, MessageSquare, CheckCircle2, Award, Calendar, Users, Briefcase } from 'lucide-react';
 import gsap from 'gsap';
 
@@ -7,58 +7,76 @@ import styles from './Hero.module.css';
 const Hero = ({ onOpenBooking }) => {
   const heroContentRef = useRef(null);
   const dashboardRef = useRef(null);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     if (!heroContentRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Set initial state for all animated elements
       const tagline = heroContentRef.current.querySelector(`.${styles.tagline}`);
       const headline = heroContentRef.current.querySelector(`.${styles.headline}`);
       const subheading = heroContentRef.current.querySelector(`.${styles.subheading}`);
       const ctaGroup = heroContentRef.current.querySelector(`.${styles.ctaGroup}`);
       const socialProof = heroContentRef.current.querySelector(`.${styles.socialProof}`);
+      const words = headline?.querySelectorAll(`.${styles.word}`);
+      const highlight = headline?.querySelector(`.${styles.highlightText}`);
+      const ctas = ctaGroup?.querySelectorAll('a, button');
 
-      const targets = [tagline, headline, subheading, ctaGroup, socialProof].filter(Boolean);
+      // Set initial states
+      gsap.set(tagline, { opacity: 0, y: 30 });
+      gsap.set(words, { opacity: 0, y: 25 });
+      gsap.set(subheading, { opacity: 0, y: 25 });
+      gsap.set(ctas, { opacity: 0, scale: 0.92 });
+      gsap.set(socialProof, { opacity: 0, y: 20 });
 
-      gsap.set(targets, { opacity: 0, y: 40, willChange: 'transform, opacity' });
+      // Slowly moving background gradient
+      if (sectionRef.current) {
+        gsap.to(sectionRef.current, {
+          backgroundPosition: '100% 50%',
+          duration: 15,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+      }
 
-      // Staggered reveal timeline
-      const tl = gsap.timeline({ delay: 0.3 });
+      const tl = gsap.timeline({ delay: 0.2 });
 
       tl.to(tagline, {
         opacity: 1,
         y: 0,
-        duration: 0.6,
+        duration: 0.5,
         ease: 'power3.out',
       })
         .to(
-          headline,
+          words,
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
+            duration: 0.55,
+            stagger: 0.05,
             ease: 'power3.out',
           },
-          '-=0.3'
+          '-=0.2'
         )
         .to(
           subheading,
           {
             opacity: 1,
             y: 0,
-            duration: 0.6,
+            duration: 0.55,
             ease: 'power3.out',
           },
-          '-=0.3'
+          '-=0.2'
         )
         .to(
-          ctaGroup,
+          ctas,
           {
             opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.out',
+            scale: 1,
+            duration: 0.5,
+            stagger: 0.12,
+            ease: 'back.out(1.6)',
           },
           '-=0.2'
         )
@@ -67,15 +85,26 @@ const Hero = ({ onOpenBooking }) => {
           {
             opacity: 1,
             y: 0,
-            duration: 0.5,
+            duration: 0.45,
             ease: 'power3.out',
           },
           '-=0.2'
         );
 
-      // Dashboard slide-in from the right
+      // Highlighted word text glow loop
+      if (highlight) {
+        gsap.to(highlight, {
+          textShadow: '0 0 16px rgba(37, 99, 235, 0.45), 0 0 28px rgba(37, 99, 235, 0.25)',
+          duration: 1.5,
+          yoyo: true,
+          repeat: -1,
+          ease: 'sine.inOut',
+        });
+      }
+
+      // Dashboard slide-in & cards stagger
       if (dashboardRef.current) {
-        gsap.set(dashboardRef.current, { opacity: 0, x: 60, willChange: 'transform, opacity' });
+        gsap.set(dashboardRef.current, { opacity: 0, x: 70 });
         tl.to(
           dashboardRef.current,
           {
@@ -84,27 +113,37 @@ const Hero = ({ onOpenBooking }) => {
             duration: 0.9,
             ease: 'power3.out',
           },
-          0.5
+          0.4
         );
 
-        // Stagger dashboard cards
         const dbCards = dashboardRef.current.querySelectorAll(`.${styles.dbCard}`);
         if (dbCards.length) {
-          gsap.set(dbCards, { opacity: 0, y: 30, scale: 0.96 });
+          gsap.set(dbCards, { opacity: 0, y: 30, scale: 0.95 });
           tl.to(
             dbCards,
             {
               opacity: 1,
               y: 0,
               scale: 1,
-              duration: 0.5,
+              duration: 0.55,
               stagger: 0.1,
               ease: 'power2.out',
-              clearProps: 'willChange',
             },
-            0.8
+            0.7
           );
         }
+
+        // Parallax effect on scroll
+        gsap.to(dashboardRef.current, {
+          yPercent: 12,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroContentRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
       }
     }, heroContentRef);
 
@@ -112,29 +151,32 @@ const Hero = ({ onOpenBooking }) => {
   }, []);
 
   return (
-    <header className={styles.heroSection}>
+    <header className={styles.heroSection} ref={sectionRef}>
       <div className={`${styles.heroContainer} container`}>
-      
         <div className={styles.heroGrid}>
           {/* Left Column - Content */}
           <div className={styles.heroContent} ref={heroContentRef}>
             <div className={styles.tagline}>
               <span className={styles.tagDot}></span>
-              Industry-Led MBA Career Accelerator
+              India's #1 MBA Career Accelerator
             </div>
             <h1 className={styles.headline}>
-              Accelerate Your MBA Career With <span className={styles.highlightText}>Industry-Led</span> Programs
+              {["Accelerate", "Your", "MBA", "Career", "With"].map((word, idx) => (
+                <span key={idx} className={styles.word}>{word}&nbsp;</span>
+              ))}
+              <span className={`${styles.highlightText} ${styles.word}`}>Industry-Led</span>&nbsp;
+              <span className={styles.word}>Mentorship</span>
             </h1>
             <p className={styles.subheading}>
-              Bridge the gap between business school academics and elite corporate recruitment. Learn from industry leaders and build verified credentials.
+              Join 5000+ ambitious students. Bridge the gap between B-school academics and elite corporate recruitment with 1-on-1 mentorship from alumni of IIMs, XLRI, FMS, ISB, and SPJIMR.
             </p>
             <div className={styles.ctaGroup}>
               <a href="#programs" className={styles.primaryCta}>
-                Explore Programs
+                Explore Placement Bootcamps
                 <ArrowRight size={18} className={styles.ctaIcon} />
               </a>
               <button onClick={onOpenBooking} className={styles.secondaryCta}>
-                Talk To A Mentor
+                Talk To An Industry Mentor
                 <MessageSquare size={18} className={styles.ctaIcon} />
               </button>
             </div>

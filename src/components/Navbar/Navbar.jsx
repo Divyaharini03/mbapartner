@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
+import gsap from 'gsap';
 import styles from './Navbar.module.css';
 
 const Navbar = ({ onOpenBooking }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +21,71 @@ const Navbar = ({ onOpenBooking }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!navRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth <= 960;
+      
+      const logo = navRef.current.querySelector(`.${styles.logo}`);
+      const links = navRef.current.querySelectorAll(`.${styles.link}`);
+      const cta = navRef.current.querySelector(`.${styles.ctaButton}`);
+      const mobileToggle = navRef.current.querySelector(`.${styles.mobileMenuToggle}`);
+
+      // Set initial positions
+      gsap.set(navRef.current, { y: -20, opacity: 0 });
+      gsap.set(logo, { scale: 0.95, opacity: 0 });
+      
+      if (!isMobile) {
+        gsap.set(links, { y: -10, opacity: 0 });
+        gsap.set(cta, { y: 12, opacity: 0 });
+      } else {
+        gsap.set(mobileToggle, { scale: 0.85, opacity: 0 });
+      }
+
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      tl.to(navRef.current, { y: 0, opacity: 1, duration: 0.5 })
+        .to(logo, { scale: 1, opacity: 1, duration: 0.5 }, '-=0.2');
+
+      if (!isMobile) {
+        tl.to(links, { y: 0, opacity: 1, duration: 0.4, stagger: 0.08 }, '-=0.2')
+          .to(cta, { y: 0, opacity: 1, duration: 0.5 }, '-=0.2');
+      } else {
+        tl.to(mobileToggle, { scale: 1, opacity: 1, duration: 0.4 }, '-=0.2');
+      }
+
+      // Magnetic Button Hover Effect
+      if (cta) {
+        const onMouseMove = (e) => {
+          const rect = cta.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          gsap.to(cta, {
+            x: x * 0.35,
+            y: y * 0.35,
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        };
+
+        const onMouseLeave = () => {
+          gsap.to(cta, {
+            x: 0,
+            y: 0,
+            duration: 0.4,
+            ease: 'elastic.out(1, 0.3)'
+          });
+        };
+
+        cta.addEventListener('mousemove', onMouseMove);
+        cta.addEventListener('mouseleave', onMouseLeave);
+      }
+    }, navRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -28,7 +95,7 @@ const Navbar = ({ onOpenBooking }) => {
   };
 
   return (
-    <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
+    <nav ref={navRef} className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
       <div className={`${styles.navContainer} container`}>
         {/* Logo */}
         <a href="/" className={styles.logo} onClick={closeMenu}>

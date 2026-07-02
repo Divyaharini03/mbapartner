@@ -1,9 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './SectionHeader.module.css';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const SectionHeader = ({ title, subtext, align = 'center', badge }) => {
   const containerClass = `${styles.headerContainer} ${styles[align]}`;
